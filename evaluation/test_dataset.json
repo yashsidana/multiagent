@@ -1,0 +1,82 @@
+[
+  {
+    "id": "sql_01",
+    "question": "What is the total revenue from all completed orders?",
+    "expected_route": "sql",
+    "category": "numeric_aggregation",
+    "expected_tables": ["orders", "order_items"]
+  },
+  {
+    "id": "sql_02",
+    "question": "Which sales representative has generated the highest total bookings?",
+    "expected_route": "sql",
+    "category": "numeric_group_by",
+    "expected_tables": ["sales_reps", "orders", "order_items"]
+  },
+  {
+    "id": "sql_03",
+    "question": "How many orders have been refunded or cancelled?",
+    "expected_route": "sql",
+    "category": "numeric_filter",
+    "expected_tables": ["orders"]
+  },
+  {
+    "id": "sql_04",
+    "question": "What is the unit price of the Enterprise AI Platform License?",
+    "expected_route": "sql",
+    "category": "numeric_lookup",
+    "expected_tables": ["products"]
+  },
+  {
+    "id": "rag_01",
+    "question": "What is the return window and restocking fee for hardware appliances?",
+    "expected_route": "rag",
+    "category": "document_policy",
+    "expected_source": "return_policy.md"
+  },
+  {
+    "id": "rag_02",
+    "question": "Why did hardware gross margins drop during Q4 according to executive review?",
+    "expected_route": "rag",
+    "category": "document_narrative",
+    "expected_source": "q4_business_review.md"
+  },
+  {
+    "id": "rag_03",
+    "question": "What is the maximum allowed software discount for Enterprise tier clients?",
+    "expected_route": "rag",
+    "category": "document_policy",
+    "expected_source": "product_pricing_guide.md"
+  },
+  {
+    "id": "rag_04",
+    "question": "When was the Legacy Data Connector Pack discontinued?",
+    "expected_route": "rag",
+    "category": "document_narrative",
+    "expected_source": "q4_business_review.md"
+  },
+  {
+    "id": "hybrid_01",
+    "question": "How much revenue was lost on the refunded order to Sao Paulo Retailers, and what caused the refund?",
+    "expected_route": "hybrid",
+    "category": "hybrid_analysis",
+    "expected_tables": ["orders", "order_items", "customers"],
+    "expected_source": "q4_business_review.md"
+  },
+  {
+    "id": "hybrid_02",
+    "question": "What was the total order value for Berlin Logistics, and what discount rate did they receive under the tier policy?",
+    "expected_route": "hybrid",
+    "category": "hybrid_analysis",
+    "expected_tables": ["orders", "order_items", "customers"],
+    "expected_source": "product_pricing_guide.md"
+  },
+  {
+    "id": "unanswerable_01",
+    "question": "What is our company's corporate dental insurance deductible for employees in Canada?",
+    "expected_route": "rag",
+    "category": "unanswerable",
+    "should_refuse": true
+  }
+]
+
