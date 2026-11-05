@@ -1,0 +1,27 @@
+# Frontend Dockerfile for Streamlit Dashboard
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir streamlit requests pandas
+
+COPY src/ui/ /app/src/ui/
+
+# Non-root user
+RUN addgroup --system appgroup && adduser --system --group appuser \
+    && chown -R appuser:appgroup /app
+USER appuser
+
+EXPOSE 8501
+
+CMD ["streamlit", "run", "src/ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
