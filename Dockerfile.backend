@@ -1,0 +1,40 @@
+# Backend Dockerfile for FastAPI Multi-Agent Service
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
+
+WORKDIR /app
+
+# Install system dependencies (build-essential and default-mysql-client for debugging)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies first for caching layers
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source code and configuration
+COPY config/ /app/config/
+COPY src/ /app/src/
+COPY data/documents/ /app/data/documents/
+COPY scripts/ /app/scripts/
+
+# Create directory for FAISS index persistence
+RUN mkdir -p /app/data/faiss_index
+
+# Non-root user setup
+RUN addgroup --system appgroup && adduser --system --group appuser \
+    && chown -R appuser:appgroup /app
+USER appuser
+
+EXPOSE 8000
+
+# Start FastAPI using Uvicorn
+CMD ["uvicorn", "src.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+
